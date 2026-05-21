@@ -1,0 +1,21 @@
+# Optional. Most labs don't need their own compose file if Floci is already running.
+# Use this if your lab needs additional services (a database, a web frontend, etc.)
+# wired into the same network as Floci.
+
+services:
+  floci:
+    image: floci/floci:latest
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # your-app:
+  #   build: .
+  #   environment:
+  #     - AWS_ENDPOINT_URL=http://floci:4566
+  #     - AWS_ACCESS_KEY_ID=test
+  #     - AWS_SECRET_ACCESS_KEY=test
+  #     - AWS_DEFAULT_REGION=us-east-1
+  #   depends_on:
+  #     - floci

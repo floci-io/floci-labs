@@ -1,0 +1,49 @@
+name: Floci boots
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  boot:
+    name: Start Floci and verify it's ready
+    runs-on: ubuntu-latest
+
+    services:
+      floci:
+        image: floci/floci:latest
+        ports:
+          - 4566:4566
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+        options: >-
+          --health-cmd "curl -sf http://localhost:4566/_floci/health || curl -sf http://localhost:4566/_localstack/health"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+
+    steps:
+      - name: Wait for Floci
+        run: |
+          echo "Waiting for Floci on localhost:4566..."
+          for i in $(seq 1 24); do
+            if curl -sf http://localhost:4566/_floci/health > /dev/null 2>&1 || \
+               curl -sf http://localhost:4566/_localstack/health > /dev/null 2>&1; then
+              echo "Floci is up."
+              exit 0
+            fi
+            echo "  attempt $i/24 — retrying in 5s"
+            sleep 5
+          done
+          echo "Floci did not become ready in time." >&2
+          exit 1
+
+      - name: Smoke test — list S3 buckets
+        env:
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          aws --endpoint-url http://localhost:4566 s3 ls
+          echo "Floci responded to an S3 API call. Boot confirmed."
