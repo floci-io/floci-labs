@@ -1,0 +1,44 @@
+# A minimal Deployment + Service. Nothing EKS-specific — this is plain Kubernetes,
+# which is the point: once Floci hands you a kubeconfig, kubectl works like always.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-nginx
+  labels:
+    app: hello-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-nginx
+  template:
+    metadata:
+      labels:
+        app: hello-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-nginx
+  labels:
+    app: hello-nginx
+spec:
+  selector:
+    app: hello-nginx
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
