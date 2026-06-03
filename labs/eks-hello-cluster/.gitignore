@@ -1,0 +1,4 @@
+# deploy-workload.sh writes a kubeconfig containing k3s admin client cert/key.
+# Never commit it.
+kubeconfig-*
+kubeconfig

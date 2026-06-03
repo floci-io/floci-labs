@@ -1,0 +1,32 @@
+# Optional. Skip this if Floci is already running (`floci start`).
+#
+# EKS is one of the services Floci backs with real Docker: it launches a k3s node via
+# the mounted docker.sock, so that mount is required for the cluster to come up.
+services:
+  floci:
+    image: floci/floci:latest
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # Uncomment to run the kubectl BONUS (deploy-workload.sh) from inside Floci's network,
+  # where the cluster endpoint hostname (floci-eks-hello-cluster:6443) resolves. The
+  # control-plane lab (run.sh) does NOT need this — run it straight from your host.
+  #
+  # runner:
+  #   image: alpine:3.20
+  #   depends_on: [floci]
+  #   working_dir: /lab
+  #   volumes:
+  #     - .:/lab
+  #   environment:
+  #     - AWS_ENDPOINT_URL=http://floci:4566
+  #     - AWS_ACCESS_KEY_ID=test
+  #     - AWS_SECRET_ACCESS_KEY=test
+  #     - AWS_DEFAULT_REGION=us-east-1
+  #     - KUBECONFIG=/lab/kubeconfig
+  #   entrypoint: ["sh", "-c"]
+  #   command: >
+  #     "apk add --no-cache bash curl aws-cli kubectl &&
+  #      bash deploy-workload.sh"
