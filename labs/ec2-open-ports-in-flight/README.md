@@ -38,7 +38,7 @@ Then either follow the guided version on [floci.io/labs](https://floci.io/labs/e
 The demo script:
 
 1. Creates a security group with **no** ingress rules
-2. Launches `ami-alpine` (→ `alpine:latest`) with UserData that starts busybox `httpd` on port 8080
+2. Launches `ami-alpine` (→ `alpine:latest`) with UserData that installs `busybox-extras` and starts busybox `httpd` on port 8080. Alpine's stock busybox has no `httpd` applet, so UserData has to `apk add busybox-extras` first, which means the instance needs outbound network
 3. Shows that nothing is reachable: `docker ps` has no `floci-ec2-fwd-*` containers
 4. Calls `authorize-security-group-ingress` for 8080. Floci reconciles the security group against live forwards and starts a `floci-ec2-fwd-<instanceId>-8080` sidecar publishing a host port from the 30000-30999 range
 5. `curl`s the app through the forwarded host port
@@ -49,7 +49,7 @@ The interesting part is what *doesn't* happen: the instance container is never r
 
 ## Try changing...
 
-- Open a second port (add another `httpd` on 9090 in UserData) and watch a second sidecar appear
+- Open a second port (add another `httpd -p 9090 -h /www` to UserData) and watch a second sidecar appear
 - Reference another security group as the ingress source instead of a CIDR: no sidecar appears, because that means private-IP reachability in AWS, not host reachability
 - Restart the Floci container and check `docker ps`: persisted forwards are recreated from the saved mapping
 - Swap `ami-alpine` for `ami-ubuntu2204` or `ami-amazonlinux2023` (unknown `ami-*` IDs fall back to Amazon Linux 2023)
