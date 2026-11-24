@@ -31,7 +31,7 @@ Thanks for thinking about adding a lab. Here's the short version.
 
 ## Questions before you start?
 
-Open a [Discussion](https://github.com/floci-io/floci/discussions) or ping the Slack at [floci.slack.com](https://floci.slack.com). "Is this a dumb idea for a lab?" is a fine thing to ask. The answer is almost always no.
+Open a [Discussion](https://github.com/floci-io/floci/discussions) or ping the Slack at [floci.io/slack](https://floci.io/slack). "Is this a dumb idea for a lab?" is a fine thing to ask. The answer is almost always no.
 
 ## Licensing
 
