@@ -67,7 +67,7 @@ docker run -d --name floci -p 4566:4566 \
 
 ## Community
 
-- **Slack:** [floci.slack.com](https://floci.slack.com)
+- **Slack:** [floci.io/slack](https://floci.io/slack)
 - **Discussions:** [floci-io/floci · Discussions](https://github.com/floci-io/floci/discussions)
 - **Main repo:** [github.com/floci-io/floci](https://github.com/floci-io/floci)
 
